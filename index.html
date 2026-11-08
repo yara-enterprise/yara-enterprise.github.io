@@ -1,57 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara Enterprise | Global Advisory & AI Governance</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .gold-gradient {
-            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gold-bg {
-            background: linear-gradient(135deg, #BF953F 0%, #B38728 50%, #AA771C 100%);
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
-
-    <!-- NAVIGATION HEADER -->
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- ... existing code -->
             <!-- LOGO BRANDING -->
             <a href="#" class="flex items-center gap-3 group">
-                <!-- CUSTOM GOLDEN SQUARE EMBLEM WITH SPARKS (MATCHING OFFICIAL BRANDING IMAGE) -->
+                <!-- OFFICIAL YARA ENTERPRISE CIRCULAR GOLDEN EMBLEM (MATCHING IMAGE) -->
                 <div class="w-10 h-10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">
                         <defs>
-                            <linearGradient id="goldBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="goldCircularGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="#FCE07D" />
-                                <stop offset="40%" stop-color="#D4AF37" />
-                                <stop offset="80%" stop-color="#AA771C" />
-                                <stop offset="100%" stop-color="#FBF5B7" />
+                                <stop offset="50%" stop-color="#D4AF37" />
+                                <stop offset="100%" stop-color="#AA771C" />
                             </linearGradient>
                         </defs>
-                        <!-- Sparkles surrounding the frame -->
-                        <path d="M 50 2 L 52.5 12 L 62.5 14.5 L 52.5 17 L 50 27 L 47.5 17 L 37.5 14.5 L 47.5 12 Z" fill="url(#goldBorderGrad)" />
-                        <path d="M 94 48 L 95.5 54 L 101.5 55.5 L 95.5 57 L 94 63 L 92.5 57 L 86.5 55.5 L 92.5 54 Z" fill="url(#goldBorderGrad)" />
-                        <path d="M 6 72 L 7 76 L 11 77 L 7 78 L 6 82 L 5 78 L 1 77 L 5 76 Z" fill="url(#goldBorderGrad)" />
-                        <circle cx="21" cy="22" r="2.5" fill="url(#goldBorderGrad)" />
-                        <circle cx="80" cy="38" r="3.5" fill="url(#goldBorderGrad)" />
-                        <circle cx="35" cy="96" r="3" fill="url(#goldBorderGrad)" />
-                        <!-- Rounded Golden Square Frame -->
-                        <rect x="25" y="19" width="50" height="62" rx="10" ry="10" fill="none" stroke="url(#goldBorderGrad)" stroke-width="4.5"/>
+                        <!-- Dark background circle -->
+                        <circle cx="100" cy="100" r="95" fill="#0B1120" stroke="url(#goldCircularGrad)" stroke-width="4"/>
+                        <!-- Inner thin gold ring -->
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="url(#goldCircularGrad)" stroke-width="1.5" stroke-opacity="0.6"/>
+                        <!-- Central Golden 'Y' Emblem -->
+                        <path d="M 62 48 L 88 48 L 100 82 L 112 48 L 138 48 L 112 92 L 112 145 L 88 145 L 88 92 Z" fill="url(#goldCircularGrad)"/>
                     </svg>
                 </div>
                 <div class="flex flex-col">
@@ -61,181 +26,16 @@
             </a>
 
             <!-- NAV LINKS -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-                <a href="#about" class="hover:text-amber-400 transition-colors">About</a>
-                <a href="#services" class="hover:text-amber-400 transition-colors">Services</a>
-                <a href="#aria" class="hover:text-amber-400 transition-colors flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Aria AI</a>
-                <a href="#retain" class="hover:text-amber-400 transition-colors">Retain Advisory</a>
-            </nav>
-
-            <!-- CONTACT / CTA -->
-            <div class="flex items-center gap-3">
-                <a href="mailto:yara.enterprise.dubai@gmail.com" class="px-4 py-2.5 rounded-xl glass-card text-slate-200 font-semibold text-[13px] hover:bg-slate-800 hover:text-amber-400 transition-all border border-slate-700/80 flex items-center gap-2">
-                    <i class="fa-regular fa-envelope text-amber-400"></i>
-                    <span class="hidden sm:inline">Executive Email</span>
-                </a>
-                <a href="https://t.me/yara_advisory" target="_blank" class="px-5 py-2.5 rounded-xl gold-bg text-slate-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center gap-2">
-                    <i class="fa-brands fa-telegram"></i>
-                    <span>Telegram</span>
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN CONTENT WRAPPER -->
-    <main class="flex-grow">
-        
-        <!-- HERO SECTION -->
-        <section class="relative py-24 md:py-32 overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(191,149,63,0.15),transparent_50%)]"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="max-w-3xl">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-6">
-                        <span>✨ Global Enterprise & AI Governance</span>
-                    </div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold text-slate-100 tracking-tight leading-tight mb-6">
-                        Empowering Global Business with <span class="gold-gradient">Executive Precision</span> & AI Intelligence.
-                    </h1>
-                    <p class="text-lg text-slate-400 leading-relaxed mb-8">
-                        Yara Enterprise delivers high-stakes strategic advisory, cross-border trade facilitation, and cutting-edge corporate AI deployment for HNWIs and global institutions.
-                    </p>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <a href="#aria" class="px-6 py-3.5 rounded-xl gold-bg text-slate-950 font-bold text-sm hover:opacity-95 transition-all shadow-xl shadow-amber-500/20">
-                            Consult Aria (AI Advisor)
-                        </a>
-                        <a href="#services" class="px-6 py-3.5 rounded-xl glass-card text-slate-200 font-semibold text-sm hover:bg-slate-800 transition-all border border-slate-700">
-                            Explore Services
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SERVICES SECTION -->
-        <section id="services" class="py-20 bg-slate-900/50 border-y border-slate-800/60">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-2xl mx-auto mb-16">
-                    <h2 class="text-3xl font-bold text-slate-100 mb-4">Core Practice Areas</h2>
-                    <p class="text-slate-400">Tailored corporate solutions for HNWIs, enterprise clients, and institutional leaders.</p>
-                </div>
-                
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Service 1 -->
-                    <div class="glass-card p-8 rounded-2xl hover:border-amber-500/40 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl mb-6">
-                            🌐
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 mb-3">International Business Advisory</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Strategic market entry, corporate structuring in UAE & Europe, and cross-border trade negotiations.
-                        </p>
-                    </div>
-
-                    <!-- Service 2 -->
-                    <div class="glass-card p-8 rounded-2xl hover:border-amber-500/40 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl mb-6">
-                            🤖
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 mb-3">Enterprise AI Integration</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Designing custom autonomous agents, executive AI advisors, and workflow automation for modern corporations.
-                        </p>
-                    </div>
-
-                    <!-- Service 3 -->
-                    <div class="glass-card p-8 rounded-2xl hover:border-amber-500/40 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl mb-6">
-                            ⚖️
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 mb-3">Investment Brokerage & Legal</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Facilitating deal structures, ICC & UNCITRAL compliant frameworks, and high-value investment brokering.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ARIA AI SECTION (Updated UI - Voice Button Removed) -->
-        <section id="aria" class="py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="glass-card p-8 md:p-12 rounded-3xl border border-amber-500/30 relative overflow-hidden">
-                    <div class="max-w-2xl">
-                        <span class="text-amber-400 text-xs font-bold tracking-widest uppercase mb-2 block">Senior Executive Advisor</span>
-                        <!-- Actions Cleaned - Only Telegram & Email -->
-                        <div class="flex flex-wrap gap-4">
-                            <a href="https://t.me/yara_advisory" target="_blank" class="px-6 py-3.5 rounded-xl gold-bg text-slate-950 font-bold text-sm hover:opacity-95 transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
-                                <i class="fa-brands fa-telegram text-base"></i>
-                                <span>Launch Telegram Chat</span>
-                            </a>
-                            <a href="mailto:yara.enterprise.dubai@gmail.com" class="px-6 py-3.5 rounded-xl glass-card text-slate-200 font-semibold text-sm hover:bg-slate-800 transition-all border border-slate-700 flex items-center gap-2">
-                                <i class="fa-regular fa-envelope text-amber-400 text-base"></i>
-                                <span>Email Executive Team</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- RETAIN ADVISORY SECTION (Fixed Route & Form Integration) -->
-        <section id="retain" class="py-20 bg-slate-900/60 border-t border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-2xl mx-auto mb-16">
-                    <span class="text-amber-400 text-xs font-bold tracking-widest uppercase mb-2 block">Executive Mentorship & Governance</span>
-                    <h2 class="text-3xl font-bold text-slate-100 mb-4">Retain Advisory Services</h2>
-                    <p class="text-slate-400">Direct board advisory, executive mentorship, and strategic partnership for scaling enterprises.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Lite Retainer -->
-                    <div class="glass-card p-8 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-slate-100 mb-2">Executive Lite Retainer</h3>
-                            <p class="text-slate-400 text-sm mb-6">Bi-weekly strategic advisory sessions for emerging enterprise leaders.</p>
-                            <ul class="text-slate-300 text-sm space-y-3 mb-8">
-                                <li class="flex items-center gap-2">✓ 2x Monthly Executive Meetings (90 Min)</li>
-                                <li class="flex items-center gap-2">✓ Direct Telegram / Email Channel</li>
-                                <li class="flex items-center gap-2">✓ Business Model & Strategy Review</li>
-                            </ul>
-                        </div>
-                        <button onclick="openAdvisoryModal('Executive Lite')" class="w-full py-3 rounded-xl border border-amber-500/50 text-amber-400 font-bold text-sm hover:bg-amber-500/10 transition-colors">
-                            Apply for Lite Advisory
-                        </button>
-                    </div>
-
-                    <!-- Full Retainer -->
-                    <div class="glass-card p-8 rounded-2xl border border-amber-500/40 relative flex flex-col justify-between">
-                        <div class="absolute -top-3 right-6 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-3 py-1 rounded-full">
-                            Full Partnership
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-slate-100 mb-2">Strategic Board Partner</h3>
-                            <p class="text-slate-400 text-sm mb-6">Continuous board-level mentorship, project oversight, and corporate AI deployment.</p>
-                            <ul class="text-slate-300 text-sm space-y-3 mb-8">
-                                <li class="flex items-center gap-2">✓ Weekly Strategic Sessions & Board Meetings</li>
-                                <li class="flex items-center gap-2">✓ Priority 24/7 Executive Support</li>
-                                <li class="flex items-center gap-2">✓ Full AI Implementation & Governance</li>
-                            </ul>
-                        </div>
-                        <button onclick="openAdvisoryModal('Strategic Board Partner')" class="w-full py-3 rounded-xl gold-bg text-slate-950 font-bold text-sm hover:opacity-95 transition-opacity">
-                            Apply for Full Retainer
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
+<!-- ... existing code -->
     <!-- FOOTER (Updated Branding & Single Logo) -->
     <footer class="glass-card border-t border-slate-800 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 flex items-center justify-center">
-                    <svg viewBox="0 0 100 100" class="w-full h-full">
-                        <path d="M 50 2 L 52.5 12 L 62.5 14.5 L 52.5 17 L 50 27 L 47.5 17 L 37.5 14.5 L 47.5 12 Z" fill="#D4AF37" />
-                        <rect x="25" y="19" width="50" height="62" rx="10" ry="10" fill="none" stroke="#D4AF37" stroke-width="5"/>
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <circle cx="100" cy="100" r="95" fill="#0B1120" stroke="#D4AF37" stroke-width="5"/>
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="#D4AF37" stroke-width="2" stroke-opacity="0.6"/>
+                        <path d="M 62 48 L 88 48 L 100 82 L 112 48 L 138 48 L 112 92 L 112 145 L 88 145 L 88 92 Z" fill="#D4AF37"/>
                     </svg>
                 </div>
                 <span class="font-bold text-slate-200">YARA ENTERPRISE</span>
@@ -243,59 +43,4 @@
             <p class="text-slate-500 text-xs text-center md:text-left">
                 © 2026 Yara Enterprise FZ-LLC. All rights reserved. | Official Repository: yara-enterprise.github.io
             </p>
-            <div class="flex gap-6 text-xs text-slate-400">
-                <a href="https://t.me/yara_advisory" target="_blank" class="hover:text-amber-400 transition-colors">Telegram</a>
-                <a href="mailto:yara.enterprise.dubai@gmail.com" class="hover:text-amber-400 transition-colors">Email</a>
-                <a href="#about" class="hover:text-amber-400 transition-colors">Privacy</a>
-                <a href="#retain" class="hover:text-amber-400 transition-colors">Advisory</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ADVISORY MODAL (Ensures clean submission without payment gateway crashes) -->
-    <div id="advisoryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
-        <div class="glass-card max-w-lg w-full p-8 rounded-3xl border border-amber-500/30 relative">
-            <button onclick="closeAdvisoryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 text-xl font-bold">&times;</button>
-            <h3 class="text-2xl font-bold text-slate-100 mb-2">Apply for Executive Advisory</h3>
-            <p class="text-slate-400 text-sm mb-6">Submit your inquiry directly to Managing Director Yara.</p>
-            
-            <form action="mailto:yara.enterprise.dubai@gmail.com" method="post" enctype="text/plain" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Company / Your Name</label>
-                    <input type="text" name="Company_Name" required placeholder="e.g. Yara Enterprise" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-amber-400">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Selected Plan</label>
-                    <input type="text" id="selectedPlanInput" name="Selected_Plan" readonly class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 font-semibold text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Primary Business Goal</label>
-                    <textarea rows="3" name="Business_Goal" required placeholder="Describe your objective..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-amber-400"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3 pt-2">
-                    <a href="https://t.me/yara_advisory" target="_blank" class="py-3 rounded-xl gold-bg text-slate-950 font-bold text-xs text-center hover:opacity-95 transition-opacity flex items-center justify-center gap-1.5">
-                        <i class="fa-brands fa-telegram"></i>
-                        <span>Via Telegram</span>
-                    </a>
-                    <button type="submit" class="py-3 rounded-xl glass-card text-slate-200 border border-slate-700 font-bold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5">
-                        <i class="fa-regular fa-envelope text-amber-400"></i>
-                        <span>Via Direct Email</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function openAdvisoryModal(planName) {
-            document.getElementById('selectedPlanInput').value = planName;
-            document.getElementById('advisoryModal').classList.remove('hidden');
-            document.getElementById('advisoryModal').classList.add('flex');
-        }
-        function closeAdvisoryModal() {
-            document.getElementById('advisoryModal').classList.add('hidden');
-            document.getElementById('advisoryModal').classList.remove('flex');
-        }
-    </script>
-</body>
-</html>
+<!-- ... existing code -->
