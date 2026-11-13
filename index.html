@@ -1,278 +1,324 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara Enterprise | Global Strategic Advisory</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', 'Noto Sans Arabic', sans-serif;
-        }
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gold-bg {
-            background: linear-gradient(135deg, #BF953F 0%, #B38728 50%, #AA771C 100%);
-        }
-        .gold-border {
-            border-image: linear-gradient(135deg, #BF953F, #AA771C) 1;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        .glass-card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card-hover:hover {
-            border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.15);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yara Enterprise FZ-LLC | Executive Strategic Advisory & Global Governance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #090d16;
+      color: #f8fafc;
+    }
+    .font-serif-luxury {
+      font-family: 'Playfair Display', serif;
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.72);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(251, 191, 36, 0.16);
+    }
+    .glass-card:hover {
+      border-color: rgba(251, 191, 36, 0.45);
+      transform: translateY(-4px);
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col justify-between">
+<body class="antialiased selection:bg-amber-500 selection:text-slate-950">
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- LOGO BRANDING WITH FIXED CONTROLLED SIZE -->
-            <a href="#" class="flex items-center gap-3 group">
-                <!-- Controlled logo dimensions to prevent page blowup -->
-                <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <svg viewBox="0 0 200 200" class="w-10 h-10 drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">
-                        <defs>
-                            <linearGradient id="goldCircularGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#FCE07D" />
-                                <stop offset="50%" stop-color="#D4AF37" />
-                                <stop offset="100%" stop-color="#AA771C" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Dark background circle -->
-                        <circle cx="100" cy="100" r="95" fill="#0B1120" stroke="url(#goldCircularGradHeader)" stroke-width="5"/>
-                        <!-- Inner thin gold ring -->
-                        <circle cx="100" cy="100" r="88" fill="none" stroke="url(#goldCircularGradHeader)" stroke-width="2" stroke-opacity="0.6"/>
-                        <!-- Central Golden 'Y' Emblem -->
-                        <path d="M 62 48 L 88 48 L 100 82 L 112 48 L 138 48 L 112 92 L 112 145 L 88 145 L 88 92 Z" fill="url(#goldCircularGradHeader)"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 group-hover:text-amber-400 transition-colors">YARA ENTERPRISE</span>
-                    <span class="text-[9px] sm:text-[10px] tracking-widest text-amber-400/80 uppercase font-semibold">Global Strategic Advisory</span>
-                </div>
+  <!-- Top Navigation -->
+  <header class="fixed top-0 inset-x-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20">
+          Y
+        </div>
+        <div>
+          <span class="font-serif-luxury text-xl font-bold tracking-wide text-white block leading-none">YARA ENTERPRISE</span>
+          <span class="text-[11px] uppercase tracking-[0.22em] text-amber-400 font-semibold">FZ-LLC • Executive Advisory</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#services" class="hover:text-amber-400 transition">Advisory Services</a>
+        <a href="#aria-hub" class="hover:text-amber-400 transition">Executive Desk (24/7)</a>
+        <a href="#affiliate" class="hover:text-amber-400 transition">Global Partnerships</a>
+        <a href="#governance" class="hover:text-amber-400 transition">Governance</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
+           class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-sm shadow-lg shadow-amber-500/20 transition">
+          Consult Executive Desk
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-36 pb-24 px-6 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_45%)] pointer-events-none"></div>
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        24/7 Executive Governance & Multilingual Advisory
+      </div>
+
+      <h1 class="font-serif-luxury text-3xl sm:text-5xl font-bold tracking-tight text-white leading-snug max-w-3xl mx-auto">
+        Preserving Principal Capital Through <span class="gold-gradient">Independent Strategic Governance</span>
+      </h1>
+
+      <p class="mt-6 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
+        Led by Managing Director <strong class="text-white font-semibold">Yara Saeed</strong>, Yara Enterprise FZ-LLC delivers conservative wealth preservation blueprints, cross-border corporate structuring, and 24/7 multilingual executive advisory coordinated by <strong class="text-amber-400 font-medium">Aria</strong>.
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
+           class="w-full sm:w-auto px-8 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base shadow-xl shadow-amber-500/20 transition">
+          Connect with Aria Executive Desk
+        </a>
+        <a href="#affiliate"
+           class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-white border border-slate-700 font-semibold text-base transition">
+          Explore Global Affiliate Programs
+        </a>
+      </div>
+
+      <!-- Trust Metrics -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+        <div class="glass-card rounded-2xl p-5">
+          <div class="text-2xl font-bold text-amber-400">100%</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Client Custody Control</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="text-2xl font-bold text-amber-400">24 / 7</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Executive Operations</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="text-2xl font-bold text-amber-400">10+</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Supported Languages</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="text-2xl font-bold text-amber-400">FZ-LLC</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">International Structuring</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Executive Services -->
+  <section id="services" class="py-20 px-6 border-t border-slate-800/70">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-amber-400 text-xs font-bold uppercase tracking-[0.2em]">Institutional Pillars</span>
+        <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white mt-2">Core Executive Advisory Services</h2>
+        <p class="text-slate-400 mt-3 text-sm sm:text-base">
+          Transparent, non-custodial strategic consulting built for long-term stability, compliance, and risk insulation.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Service 1 -->
+        <div class="glass-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
+            01
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Principal Wealth Preservation</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-5">
+            Tailored 10+ year retirement and capital preservation blueprints focused on inflation defense, liquidity segmentation, and eliminating hidden management fees.
+          </p>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li>• Zero speculative crypto or high-volatility exposure</li>
+            <li>• 100% client custody in local banking institutions</li>
+            <li>• Custom Bank & Advisor Preparation Checklists</li>
+          </ul>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="glass-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
+            02
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Cross-Border FZ-LLC Structuring</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-5">
+            International corporate governance, UAE Free Zone strategic architecture, and compliant cross-border operational frameworks for modern enterprises.
+          </p>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li>• Strict international regulatory compliance</li>
+            <li>• Multi-currency operational readiness</li>
+            <li>• Executive governance & privacy protocols</li>
+          </ul>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="glass-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
+            03
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Independent Strategic Consulting</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-5">
+            Flat-fee, objective second-opinion strategy reviews and drawdown defense audits with direct executive follow-up.
+          </p>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li>• Transparent one-time flat consulting scope</li>
+            <li>• Delivered within 3–5 business days</li>
+            <li>• Direct executive Q&A review</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aria 24/7 Executive Telegram Desk -->
+  <section id="aria-hub" class="py-20 px-6 bg-slate-900/40 border-t border-slate-800/70">
+    <div class="max-w-6xl mx-auto glass-card rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-4">
+            ● DIRECT EXECUTIVE CONCIERGE • 24/7
+          </div>
+          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white">
+            Speak with <span class="text-amber-400">Aria</span> — Senior Executive Advisor
+          </h2>
+          <p class="text-slate-300 mt-4 leading-relaxed text-sm sm:text-base">
+            Aria serves as the dedicated Senior Advisory & Client Relations Coordinator for Yara Enterprise FZ-LLC. Available around the clock on Telegram, he assists international clients via both <strong>written correspondence and voice notes</strong> across Kurdish, Arabic, English, Persian, Turkish, French, German, Spanish, Russian, and Chinese.
+          </p>
+
+          <div class="mt-6 grid grid-cols-2 gap-4 text-xs text-slate-300">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <strong class="text-amber-400 block mb-1">🎙️ Voice & Text Desk</strong>
+              Direct executive communication via voice notes or written inquiry.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <strong class="text-amber-400 block mb-1">🌍 Multilingual Support</strong>
+              Immediate response in your preferred international language.
+            </div>
+          </div>
+
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
+               class="px-7 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20">
+              Start Direct Consultation on Telegram →
             </a>
-
-            <!-- EXECUTIVE NAVIGATION -->
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="#services" class="text-sm text-slate-300 hover:text-amber-400 transition-colors font-medium">Services</a>
-                <a href="#aria" class="text-sm text-slate-300 hover:text-amber-400 transition-colors font-medium">Executive Intelligence</a>
-                <a href="#contact" class="text-sm text-slate-300 hover:text-amber-400 transition-colors font-medium">Contact Desk</a>
-            </nav>
-
-            <!-- DIRECT CONTACT BUTTONS (TELEGRAM & EMAIL) -->
-            <div class="flex items-center gap-3">
-                <a href="mailto:yara.enterprise.dubai@gmail.com" class="hidden sm:inline-flex px-3.5 py-2 rounded-xl glass-card text-slate-200 hover:text-amber-400 font-medium text-xs border border-slate-700/80 hover:border-amber-500/40 transition-all items-center gap-2">
-                    <i class="fa-solid fa-envelope text-amber-400"></i>
-                    <span>Email Desk</span>
-                </a>
-                <a href="https://t.me/Yara_Advisory" target="_blank" class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl gold-bg text-slate-950 font-bold text-xs sm:text-sm hover:opacity-95 transition-all shadow-lg shadow-amber-500/10 flex items-center gap-2">
-                    <i class="fa-brands fa-telegram text-slate-950 text-base"></i>
-                    <span>Executive Desk</span>
-                </a>
-            </div>
+          </div>
         </div>
-    </header>
 
-    <!-- HERO SECTION -->
-    <section class="relative py-24 lg:py-32 overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.08),transparent_50%)]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-amber-500/30 text-amber-300 text-xs font-semibold mb-8">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                Dubai FZ-LLC | International Strategic Advisory
+        <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/25 rounded-2xl p-8 text-center shadow-2xl">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 font-serif-luxury text-2xl font-bold mx-auto mb-5">
+            A
+          </div>
+          <h3 class="font-serif-luxury text-2xl font-bold text-white">Private Client Channel</h3>
+          <p class="text-slate-400 text-sm mt-2 max-w-md mx-auto leading-relaxed">
+            Connect directly with Aria on our encrypted Telegram desk for immediate strategic scheduling, service documentation, and partnership onboarding.
+          </p>
+          <div class="mt-6 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-300">
+            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">🔒 Confidential & Encrypted</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">⚡ Instant Desk Routing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global Affiliate & Partnership Programs -->
+  <section id="affiliate" class="py-20 px-6 border-t border-slate-800/70">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-amber-400 text-xs font-bold uppercase tracking-[0.2em]">Automated Revenue Network</span>
+        <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white mt-2">Global Affiliate & Partnership Programs</h2>
+        <p class="text-slate-400 mt-3 text-sm sm:text-base">
+          Partner with Yara Enterprise FZ-LLC through our automated 24/7 tracking infrastructure and earn transparent institutional commissions.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Affiliate Card 1 -->
+        <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold">15% COMMISSION</span>
+              <span class="text-xs text-emerald-400 font-medium">● Active Tracking</span>
             </div>
-
-            <!-- Balanced and refined font size for Hero Heading -->
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-100 tracking-tight max-w-4xl mx-auto leading-tight mb-8">
-                Transforming Enterprises Through <span class="gold-gradient-text">Strategic Advisory</span>
-            </h1>
-
-            <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-                Empowering board members, executive leaders, and global investors with precision corporate governance, trade facilitation, and advanced executive intelligence.
+            <h3 class="text-xl font-bold text-white">Global Strategic Advisory Referral</h3>
+            <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+              Refer executives, retirees, or international entrepreneurs seeking independent strategic consulting and capital preservation blueprints.
             </p>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://t.me/Yara_Advisory" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-slate-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-xl shadow-amber-500/20 flex items-center justify-center gap-3">
-                    <i class="fa-brands fa-telegram text-lg"></i>
-                    <span>Connect on Telegram Desk</span>
-                </a>
-                <a href="mailto:yara.enterprise.dubai@gmail.com" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-slate-200 border border-slate-700 font-semibold text-sm hover:bg-slate-800/80 transition-colors flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-envelope text-amber-400 text-lg"></i>
-                    <span>Official Email Desk</span>
-                </a>
-            </div>
+          </div>
+          <div class="mt-6 pt-5 border-t border-slate-800">
+            <a href="https://yaraenterprise.pythonanywhere.com/affiliate/advisory?ref=yara_enterprise" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center w-full py-3 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">
+              Activate Advisory Affiliate Link →
+            </a>
+          </div>
         </div>
-    </section>
 
-    <!-- ADVISORY SERVICES -->
-    <section id="services" class="py-20 border-t border-slate-800/60 bg-slate-950/50">
-    <!-- ARIA EXECUTIVE INTELLIGENCE SECTION WITH INTERACTIVE CHAT DESK -->
-    <section id="aria" class="py-20 border-t border-slate-800/60">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="glass-card rounded-3xl p-6 sm:p-10 border border-amber-500/20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                
-                <!-- Left Description -->
-                <div class="lg:col-span-5">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 text-amber-400 text-xs font-semibold mb-4">
-                        Senior Strategic Intelligence
-                    </div>
-                    <h2 class="text-3xl font-bold text-slate-100 mb-4">Consult with Aria</h2>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        Aria is the Senior Executive Assistant for Yara Enterprise. Test initial queries below or switch directly to Telegram for secure voice & confidential advisory.
-                    </p>
-                    <div class="flex flex-col gap-2.5 text-xs text-slate-300 font-medium">
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> 100% Confidential Governance</span>
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Smart Telegram Redirection</span>
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-envelope text-amber-400"></i> yara.enterprise.dubai@gmail.com</span>
-                    </div>
-                </div>
-
-                <!-- Right Interactive Web Chat Widget -->
-                <div class="lg:col-span-7 bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-2xl flex flex-col h-[380px]">
-                    <!-- Chat Header -->
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3 px-2">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span class="text-xs font-bold tracking-wider text-slate-200 uppercase">Aria Desk | Online</span>
-                        </div>
-                        <a href="https://t.me/Yara_Advisory" target="_blank" class="text-xs text-amber-400 hover:underline flex items-center gap-1 font-semibold">
-                            <i class="fa-brands fa-telegram"></i> Open Telegram
-                        </a>
-                    </div>
-
-                    <!-- Chat Messages Container -->
-                    <div id="ariaChatBox" class="flex-grow overflow-y-auto space-y-3 px-2 text-xs leading-relaxed">
-                        <!-- Initial Message -->
-                        <div class="bg-slate-800/80 border border-slate-700/60 p-3 rounded-xl text-slate-200 max-w-[85%]">
-                            <p class="font-semibold text-amber-400 mb-1">Aria (Senior Advisory):</p>
-                            Welcome to Yara Enterprise. I am Aria, Senior Strategic Assistant to Managing Director Yara. How may we assist your corporate restructuring or investment objectives today?
-                        </div>
-                    </div>
-
-                    <!-- Chat Input Controls -->
-                    <form id="ariaForm" onsubmit="handleAriaSubmit(event)" class="mt-3 pt-3 border-t border-slate-800 flex items-center gap-2">
-                        <input type="text" id="ariaInput" placeholder="Type your inquiry..." class="flex-grow bg-slate-950 text-slate-200 text-xs rounded-xl px-4 py-2.5 border border-slate-800 focus:outline-none focus:border-amber-500/50 transition-colors">
-                        <button type="button" onclick="handleMicClick()" title="Male Voice Advisory Desk" class="p-2.5 bg-slate-800 text-amber-400 rounded-xl hover:bg-slate-700 transition-colors">
-                            <i class="fa-solid fa-microphone text-sm"></i>
-                        </button>
-                        <button type="submit" class="gold-bg text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs hover:opacity-90 transition-opacity">
-                            Send
-                        </button>
-                    </form>
-                </div>
-
+        <!-- Affiliate Card 2 -->
+        <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold">10% RECURRING</span>
+              <span class="text-xs text-emerald-400 font-medium">● Active Tracking</span>
             </div>
-        </div>
-    </section>
-
-    <!-- FOOTER WITH CONTROLLED LOGO -->
-    <footer id="contact" class="glass-card border-t border-slate-800 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-                    <svg viewBox="0 0 200 200" class="w-8 h-8">
-                        <circle cx="100" cy="100" r="95" fill="#0B1120" stroke="#D4AF37" stroke-width="5"/>
-                        <circle cx="100" cy="100" r="88" fill="none" stroke="#D4AF37" stroke-width="2" stroke-opacity="0.6"/>
-                        <path d="M 62 48 L 88 48 L 100 82 L 112 48 L 138 48 L 112 92 L 112 145 L 88 145 L 88 92 Z" fill="#D4AF37"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-bold text-slate-200 text-sm">YARA ENTERPRISE FZ-LLC</span>
-                    <a href="mailto:yara.enterprise.dubai@gmail.com" class="text-xs text-amber-400/90 hover:underline">yara.enterprise.dubai@gmail.com</a>
-                </div>
-            </div>
-            <p class="text-slate-500 text-xs text-center md:text-left">
-                © 2026 Yara Enterprise FZ-LLC. All rights reserved. | Global Strategic Advisory Desk
+            <h3 class="text-xl font-bold text-white">Enterprise Infrastructure & Cloud Partner</h3>
+            <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+              Connect businesses with automated 24/7 multilingual client advisory hubs and enterprise cloud governance solutions.
             </p>
+          </div>
+          <div class="mt-6 pt-5 border-t border-slate-800">
+            <a href="https://yaraenterprise.pythonanywhere.com/affiliate/infra?ref=yara_enterprise" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center w-full py-3 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-sm transition">
+              Activate Infrastructure Affiliate Link →
+            </a>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-</body>
-</html>
-    <!-- JAVASCRIPT FOR ARIA'S SMART CHAT DESK -->
-    <script>
-        let messageCount = 0;
+  <!-- Executive Governance & Footer -->
+  <footer id="governance" class="py-16 px-6 bg-slate-950 border-t border-slate-800/80">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10 text-sm">
+      <div>
+        <div class="font-serif-luxury text-xl font-bold text-white">YARA ENTERPRISE FZ-LLC</div>
+        <p class="text-slate-400 mt-3 leading-relaxed text-xs">
+          Executive Strategic Advisory, Principal Wealth Preservation Blueprints, and International Corporate Governance.
+        </p>
+        <p class="text-amber-400/90 text-xs mt-4 font-medium">
+          Managing Director: Yara Saeed
+        </p>
+      </div>
 
-        // Distinct Voice / Mic Handler (Male Executive Voice Notice)
-        function handleMicClick() {
-            const chatBox = document.getElementById('ariaChatBox');
-            const micNoticeHtml = `
-                <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-300 max-w-[88%] text-xs space-y-2">
-                    <p class="font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-microphone text-amber-400"></i> Voice Advisory Requested:
-                    </p>
-                    <p>Direct audio notes with Senior Advisor Aria (Executive Male Voice) are conducted securely via Telegram.</p>
-                    <a href="https://t.me/Yara_Advisory" target="_blank" class="inline-flex items-center gap-2 gold-bg text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px]">
-                        <i class="fa-brands fa-telegram"></i> Speak with Aria on Telegram
-                    </a>
-                </div>
-            `;
-            chatBox.innerHTML += micNoticeHtml;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+      <div>
+        <div class="text-white font-semibold mb-3">Executive Desk & Contact</div>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li>Email: <a href="mailto:yara.enterprise.dubai@gmail.com" class="text-slate-200 hover:text-amber-400">yara.enterprise.dubai@gmail.com</a></li>
+          <li>Operating Hub: UAE & International Digital Governance</li>
+          <li>Executive Desk: Active 24/7 via Telegram</li>
+        </ul>
+      </div>
 
-        // Distinct Text Input Handler
-        function handleAriaSubmit(e) {
-            e.preventDefault();
-            const input = document.getElementById('ariaInput');
-            const chatBox = document.getElementById('ariaChatBox');
-            const userText = input.value.trim();
-            if(!userText) return;
+      <div>
+        <div class="text-white font-semibold mb-3">Compliance & Regulatory Notice</div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Yara Enterprise FZ-LLC provides independent educational and strategic consulting services only. We never hold, manage, or take custody of client funds; clients retain 100% direct control in their own licensed financial institutions.
+        </p>
+      </div>
+    </div>
 
-            // Render User Message
-            const userMsgHtml = `<div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-200 ml-auto max-w-[85%] text-right">${userText}</div>`;
-            chatBox.innerHTML += userMsgHtml;
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+    <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+      <span>© 2026 Yara Enterprise FZ-LLC. All Rights Reserved.</span>
+      <span class="mt-2 sm:mt-0">24/7 Executive Governance & Client Relations</span>
+    </div>
+  </footer>
 
-            messageCount++;
-
-            // Aria Smart Limit Text Reply
-            setTimeout(() => {
-                let ariaReply = '';
-                if(messageCount === 1) {
-                    ariaReply = `Thank you for your text query: "${userText}". As Senior Advisor to Managing Director Yara, I welcome you to connect via our Telegram Desk for tailored corporate strategy.`;
-                } else {
-                    ariaReply = `To maintain strict executive confidentiality, direct consultation with Managing Director Yara and myself continues on Telegram.`;
-                }
-
-                const ariaMsgHtml = `
-                    <div class="bg-slate-800/90 border border-slate-700/80 p-3 rounded-xl text-slate-200 max-w-[88%] space-y-2">
-                        <p class="font-semibold text-amber-400">Aria (Senior Strategic Advisor):</p>
-                        <p>${ariaReply}</p>
-                        <a href="https://t.me/Yara_Advisory" target="_blank" class="inline-flex items-center gap-2 gold-bg text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] hover:opacity-95">
-                            <i class="fa-brands fa-telegram"></i> Launch Telegram Desk
-                        </a>
-                    </div>
-                `;
-                chatBox.innerHTML += ariaMsgHtml;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
-        }
-    </script>
 </body>
 </html>
