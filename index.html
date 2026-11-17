@@ -1,29 +1,51 @@
+from __future__ import annotations
+
 import os
+import re
 import asyncio
 import logging
 import tempfile
+from flask import Flask, request
 
 import requests
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import (
-    ApplicationBuilder,
+    Application,
     ContextTypes,
     CommandHandler,
     MessageHandler,
     filters,
 )
 
-# فایلی .env لە هەمان فۆڵدەری ئەم فایلە بخوێنەوە (ڕێگای تەواو، تا لە PythonAnywhere کار بکات)
+# ڕێکخستنی فایلی .env
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-TOKEN = os.environ.get("BOT_TOKEN")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")  # ئارەزوومەندانەیە، بۆ گۆڕینی دەنگ بۆ تێکست
+def load_token() -> str | None:
+    token = os.environ.get("BOT_TOKEN")
+    if token:
+        return token.strip().strip('"').strip("'")
+    pattern = re.compile(r"\d{6,}:[A-Za-z0-9_-]{30,}")
+    for name in (".env", "token.txt"):
+        path = os.path.join(BASE_DIR, name)
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                match = pattern.search(f.read())
+            if match:
+                return match.group(0)
+    return None
+
+TOKEN = load_token()
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+TTS_VOICE = os.environ.get("TTS_VOICE", "ar-IQ-RanaNeural")
+TTS_VOICE_EN = os.environ.get("TTS_VOICE_EN", "en-US-AriaNeural")
+VOICE_REPLIES = os.environ.get("VOICE_REPLIES", "1") != "0"
 
 if not TOKEN:
-    raise SystemExit("BOT_TOKEN نەدۆزرایەوە. لە فایلی .env بینووسە: BOT_TOKEN=...")
+    raise SystemExit("BOT_TOKEN نەدۆزرایەوە لە .env")
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -31,14 +53,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger("aria-bot")
 
+flask_app = Flask(__name__)
+
+# دروستکردنی ئەپی تێلیگرام بۆ Webhook
+telegram_app = Application.builder().token(TOKEN).updater(None).build()
 
 def build_reply(text: str) -> str:
-    """لۆجیکی وەڵامدانەوە، هاوبەشە لە نێوان تێکست و دەنگ."""
     low = text.lower()
     if "yara" in low or "یارا" in text:
         return (
             "سڵاو لە دڵە زێڕینەکەت بەڕێوەبەرە خۆشەویستەکەم، یارا گیان! 🌸💎 لە خزمەتتدام. "
-            "فەرماندە، کارە ئۆتۆماتیکەکانی ئاریا بە تەواوی چالاکن. ☕🚀✨"
+            "فەرماندە، کارە ئۆتۆماتیکەکانی ئاریا بە تەواوی لەسەر هەور چالاکن. ☕🚀✨"
         )
     if "retire" in low or "خانەنشین" in text:
         return (
@@ -57,9 +82,7 @@ def build_reply(text: str) -> str:
         "وەرگیرا. بۆ بەردەوامی گفتوگۆی فەرمی لە خزمەتتدام."
     )
 
-
 def transcribe_file(path: str) -> str | None:
-    """دەنگ دەگۆڕێت بۆ تێکست بە Whisper. ئەگەر کلیل نەبێت None دەگەڕێنێتەوە."""
     if not OPENAI_API_KEY:
         return None
     with open(path, "rb") as f:
@@ -73,6 +96,31 @@ def transcribe_file(path: str) -> str | None:
     resp.raise_for_status()
     return resp.json().get("text", "").strip()
 
+async def send_reply(msg, text: str):
+    await msg.reply_text(text)
+    if not VOICE_REPLIES:
+        return
+    path = None
+    try:
+        import edge_tts
+        clean = re.sub(r"[^\w\s.,!?؟،:'\-]", " ", text)
+        clean = re.sub(r"\s+", " ", clean).strip()
+        if not clean:
+            return
+        has_arabic_script = re.search(r"[\u0600-\u06FF]", clean) is not None
+        voice = TTS_VOICE if has_arabic_script else TTS_VOICE_EN
+
+        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
+            path = tmp.name
+        await edge_tts.Communicate(clean, voice).save(path)
+
+        with open(path, "rb") as f:
+            await msg.reply_voice(voice=f)
+    except Exception:
+        logger.exception("نەتوانرا وەڵامی دەنگی بنێردرێت")
+    finally:
+        if path and os.path.exists(path):
+            os.remove(path)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_name = update.effective_user.first_name if update.effective_user else "فەرماندە"
@@ -82,12 +130,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "چۆن دەتوانم هاوکاریت بکەم لە پرۆژە و ڕاوێژکارییەکانتدا؟ ☕🚀"
     )
 
-
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
-    await update.message.reply_text(build_reply(update.message.text.strip()))
-
+    await send_reply(update.message, build_reply(update.message.text.strip()))
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
@@ -98,12 +144,8 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await context.bot.send_chat_action(msg.chat_id, ChatAction.TYPING)
-
     if not OPENAI_API_KEY:
-        await msg.reply_text(
-            "نامە دەنگییەکەتم وەرگرت 🎙️ بەڵام هێشتا ناتوانم دەنگ بگۆڕم بۆ تێکست. "
-            "تکایە پەیامەکەت بە نووسین بنێرە. 🌸"
-        )
+        await msg.reply_text("نامە دەنگییەکەتم وەرگرت 🎙️ بەڵام کلیلی ئۆپن‌ئای نەدۆزرایەوە.")
         return
 
     tmp_path = None
@@ -113,33 +155,32 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
             tmp_path = tmp.name
         await tg_file.download_to_drive(tmp_path)
 
-        # کارە درێژخایەنەکە لە thread جیا بکە تا بوتەکە نەوەستێت
         text = await asyncio.to_thread(transcribe_file, tmp_path)
-
         if not text:
-            await msg.reply_text("نەمتوانی دەنگەکە بگۆڕم بۆ تێکست. تکایە دووبارە بنێرە یان بنووسە. 🌸")
+            await msg.reply_text("نەمتوانی دەنگەکە بگۆڕم بۆ تێکست.")
             return
 
         await msg.reply_text(f"🎙️ بیستم: {text}")
-        await msg.reply_text(build_reply(text))
+        await send_reply(msg, build_reply(text))
     except Exception:
-        logger.exception("هەڵە لە پرۆسەی نامە دەنگییەکە")
-        await msg.reply_text("ببورە، کێشەیەک ڕوویدا لە کاتی پرۆسەی دەنگەکە. تکایە دووبارە هەوڵ بدەرەوە. 🌸")
+        logger.exception("هەڵە لە پرۆسەی دەنگ")
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.remove(tmp_path)
 
+# زیادکردنی هەندڵەرەکان بۆ ئەپی تێلیگرام
+telegram_app.add_handler(CommandHandler("start", start))
+telegram_app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
+telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
-async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE):
-    logger.error("هەڵەی بێ-گرتن:", exc_info=context.error)
+@flask_app.route(f"/{TOKEN}", methods=["POST"])
+def webhook():
+    """ئەم ڕێگەیە داواکارییەکان لە تێلیگرامەوە وەردەگرێت و دەیانێرێت بۆ بوت"""
+    if request.method == "POST":
+        update = Update.de_json(request.get_json(force=True), telegram_app.bot)
+        asyncio.run(telegram_app.process_update(update))
+    return "OK", 200
 
-
-if __name__ == "__main__":
-    print("Starting Aria Bot Engine...")
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
-    app.add_error_handler(on_error)
-    print("Bot is running... (Aria Online 🚀)")
-    app.run_polling(drop_pending_updates=True)
+@flask_app.route("/")
+def index():
+    return "Aria Bot is running 24/7 on PythonAnywhere! 🚀"
