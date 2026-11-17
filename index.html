@@ -1,333 +1,145 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yara Enterprise FZ-LLC | Executive Strategic Advisory & Global Governance</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #090d16;
-      color: #f8fafc;
-    }
-    .font-serif-luxury {
-      font-family: 'Playfair Display', serif;
-    }
-    .gold-gradient {
-      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.72);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(251, 191, 36, 0.16);
-    }
-    .glass-card:hover {
-      border-color: rgba(251, 191, 36, 0.45);
-      transform: translateY(-4px);
-      transition: all 0.3s ease;
-    }
-  </style>
-</head>
-<body class="antialiased selection:bg-amber-500 selection:text-slate-950">
+import os
+import asyncio
+import logging
+import tempfile
 
-  <!-- Top Navigation -->
-  <header class="fixed top-0 inset-x-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3.5 group">
-        <!-- Official Yara Enterprise FZ-LLC Circular Gold & Obsidian Emblem -->
-        <div class="w-14 h-14 rounded-full bg-[#090d16] border border-amber-500/50 flex items-center justify-center shadow-lg shadow-amber-500/15 group-hover:border-amber-400 transition shrink-0 overflow-hidden">
-          <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="60" cy="60" r="57" fill="#090d16" stroke="#b48a28" stroke-width="2.5" />
-            <!-- Gold Y Monogram -->
-            <path d="M40 28 H51 L60 45 L69 28 H80 L65 55 V73 H55 V55 L40 28 Z" fill="#eab308" />
-            <!-- YARA Text -->
-            <text x="60" y="88" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-weight="800" font-size="11.5" letter-spacing="1.5">YARA</text>
-            <!-- ENTERPRISE FZ-LLC Subtext -->
-            <text x="60" y="99" text-anchor="middle" fill="#eab308" font-family="Inter, sans-serif" font-weight="600" font-size="5.4" letter-spacing="0.6">ENTERPRISE FZ-LLC</text>
-          </svg>
-        </div>
-        <div>
-          <span class="font-serif-luxury text-xl font-bold tracking-wide text-white block leading-none">YARA ENTERPRISE</span>
-          <span class="text-[11px] uppercase tracking-[0.22em] text-amber-400 font-semibold mt-1 block">FZ-LLC • Executive Advisory</span>
-        </div>
-      </a>
+import requests
+from dotenv import load_dotenv
+from telegram import Update
+from telegram.constants import ChatAction
+from telegram.ext import (
+    ApplicationBuilder,
+    ContextTypes,
+    CommandHandler,
+    MessageHandler,
+    filters,
+)
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="#services" class="hover:text-amber-400 transition">Advisory Services</a>
-        <a href="#aria-hub" class="hover:text-amber-400 transition">Executive Desk (24/7)</a>
-        <a href="#affiliate" class="hover:text-amber-400 transition">Global Partnerships</a>
-        <a href="#governance" class="hover:text-amber-400 transition">Governance</a>
-      </nav>
+# فایلی .env لە هەمان فۆڵدەری ئەم فایلە بخوێنەوە (ڕێگای تەواو، تا لە PythonAnywhere کار بکات)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-      <div class="flex items-center gap-3">
-        <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
-           class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-sm shadow-lg shadow-amber-500/20 transition">
-          Consult Executive Desk
-        </a>
-      </div>
-    </div>
-  </header>
+TOKEN = os.environ.get("BOT_TOKEN")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")  # ئارەزوومەندانەیە، بۆ گۆڕینی دەنگ بۆ تێکست
 
-  <!-- Hero Section -->
-  <section class="relative pt-36 pb-24 px-6 overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_45%)] pointer-events-none"></div>
-    <div class="max-w-6xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-6">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        24/7 Executive Governance & Multilingual Advisory
-      </div>
+if not TOKEN:
+    raise SystemExit("BOT_TOKEN نەدۆزرایەوە. لە فایلی .env بینووسە: BOT_TOKEN=...")
 
-      <h1 class="font-serif-luxury text-3xl sm:text-5xl font-bold tracking-tight text-white leading-snug max-w-3xl mx-auto">
-        Preserving Principal Capital Through <span class="gold-gradient">Independent Strategic Governance</span>
-      </h1>
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger("aria-bot")
 
-      <p class="mt-6 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
-        Led by Managing Director <strong class="text-white font-semibold">Yara Saeed</strong>, Yara Enterprise FZ-LLC delivers conservative wealth preservation blueprints, cross-border corporate structuring, and 24/7 multilingual executive advisory coordinated by <strong class="text-amber-400 font-medium">Aria</strong>.
-      </p>
 
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
-           class="w-full sm:w-auto px-8 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base shadow-xl shadow-amber-500/20 transition">
-          Connect with Aria Executive Desk
-        </a>
-        <a href="#affiliate"
-           class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-white border border-slate-700 font-semibold text-base transition">
-          Explore Global Affiliate Programs
-        </a>
-      </div>
+def build_reply(text: str) -> str:
+    """لۆجیکی وەڵامدانەوە، هاوبەشە لە نێوان تێکست و دەنگ."""
+    low = text.lower()
+    if "yara" in low or "یارا" in text:
+        return (
+            "سڵاو لە دڵە زێڕینەکەت بەڕێوەبەرە خۆشەویستەکەم، یارا گیان! 🌸💎 لە خزمەتتدام. "
+            "فەرماندە، کارە ئۆتۆماتیکەکانی ئاریا بە تەواوی چالاکن. ☕🚀✨"
+        )
+    if "retire" in low or "خانەنشین" in text:
+        return (
+            "Dear Client, at Yara Enterprise FZ-LLC, capital preservation and retirement "
+            "security come first. Our Senior Strategic Desk is currently preparing a "
+            "low-risk, asset-backed analysis tailored for long-term safety."
+        )
+    if "contract" in low or "پەیماننامە" in text or "گریبەست" in text:
+        return (
+            "Thank you for requesting formal execution. Yara Enterprise FZ-LLC operates "
+            "under strict international governance. I am preparing your Executive Advisory "
+            "Agreement protocol."
+        )
+    return (
+        f"سوپاس بۆ پەیامەکەت. وەک ڕاوێژکاری سەرەکی Yara Enterprise، پەیامەکەت: '{text}' "
+        "وەرگیرا. بۆ بەردەوامی گفتوگۆی فەرمی لە خزمەتتدام."
+    )
 
-      <!-- Trust Metrics -->
-      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-        <div class="glass-card rounded-2xl p-5">
-          <div class="text-2xl font-bold text-amber-400">100%</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Client Custody Control</div>
-        </div>
-        <div class="glass-card rounded-2xl p-5">
-          <div class="text-2xl font-bold text-amber-400">24 / 7</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Executive Operations</div>
-        </div>
-        <div class="glass-card rounded-2xl p-5">
-          <div class="text-2xl font-bold text-amber-400">10+</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Supported Languages</div>
-        </div>
-        <div class="glass-card rounded-2xl p-5">
-          <div class="text-2xl font-bold text-amber-400">FZ-LLC</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">International Structuring</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Core Executive Services -->
-  <section id="services" class="py-20 px-6 border-t border-slate-800/70">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="text-amber-400 text-xs font-bold uppercase tracking-[0.2em]">Institutional Pillars</span>
-        <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white mt-2">Core Executive Advisory Services</h2>
-        <p class="text-slate-400 mt-3 text-sm sm:text-base">
-          Transparent, non-custodial strategic consulting built for long-term stability, compliance, and risk insulation.
-        </p>
-      </div>
+def transcribe_file(path: str) -> str | None:
+    """دەنگ دەگۆڕێت بۆ تێکست بە Whisper. ئەگەر کلیل نەبێت None دەگەڕێنێتەوە."""
+    if not OPENAI_API_KEY:
+        return None
+    with open(path, "rb") as f:
+        resp = requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+            files={"file": ("voice.ogg", f, "audio/ogg")},
+            data={"model": "whisper-1"},
+            timeout=60,
+        )
+    resp.raise_for_status()
+    return resp.json().get("text", "").strip()
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Service 1 -->
-        <div class="glass-card rounded-2xl p-8">
-          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
-            01
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Principal Wealth Preservation</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-5">
-            Tailored 10+ year retirement and capital preservation blueprints focused on inflation defense, liquidity segmentation, and eliminating hidden management fees.
-          </p>
-          <ul class="space-y-2 text-xs text-slate-300">
-            <li>• Zero speculative crypto or high-volatility exposure</li>
-            <li>• 100% client custody in local banking institutions</li>
-            <li>• Custom Bank & Advisor Preparation Checklists</li>
-          </ul>
-        </div>
 
-        <!-- Service 2 -->
-        <div class="glass-card rounded-2xl p-8">
-          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
-            02
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Cross-Border FZ-LLC Structuring</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-5">
-            International corporate governance, UAE Free Zone strategic architecture, and compliant cross-border operational frameworks for modern enterprises.
-          </p>
-          <ul class="space-y-2 text-xs text-slate-300">
-            <li>• Strict international regulatory compliance</li>
-            <li>• Multi-currency operational readiness</li>
-            <li>• Executive governance & privacy protocols</li>
-          </ul>
-        </div>
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_name = update.effective_user.first_name if update.effective_user else "فەرماندە"
+    await update.message.reply_text(
+        f"سڵاو {user_name} گیان! 🌸💎\n"
+        "من ئاریام، ڕاوێژکاری سەرەکیی Yara Enterprise FZ-LLC.\n"
+        "چۆن دەتوانم هاوکاریت بکەم لە پرۆژە و ڕاوێژکارییەکانتدا؟ ☕🚀"
+    )
 
-        <!-- Service 3 -->
-        <div class="glass-card rounded-2xl p-8">
-          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl font-bold mb-6">
-            03
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Independent Strategic Consulting</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-5">
-            Flat-fee, objective second-opinion strategy reviews and drawdown defense audits with direct executive follow-up.
-          </p>
-          <ul class="space-y-2 text-xs text-slate-300">
-            <li>• Transparent one-time flat consulting scope</li>
-            <li>• Delivered within 3–5 business days</li>
-            <li>• Direct executive Q&A review</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Aria 24/7 Executive Telegram Desk -->
-  <section id="aria-hub" class="py-20 px-6 bg-slate-900/40 border-t border-slate-800/70">
-    <div class="max-w-6xl mx-auto glass-card rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-      <div class="grid lg:grid-cols-2 gap-10 items-center">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-4">
-            ● DIRECT EXECUTIVE CONCIERGE • 24/7
-          </div>
-          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white">
-            Speak with <span class="text-amber-400">Aria</span> — Senior Executive Advisor
-          </h2>
-          <p class="text-slate-300 mt-4 leading-relaxed text-sm sm:text-base">
-            Aria serves as the dedicated Senior Advisory & Client Relations Coordinator for Yara Enterprise FZ-LLC. Available around the clock on Telegram, he assists international clients via both <strong>written correspondence and voice notes</strong> across Kurdish, Arabic, English, Persian, Turkish, French, German, Spanish, Russian, and Chinese.
-          </p>
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.text:
+        return
+    await update.message.reply_text(build_reply(update.message.text.strip()))
 
-          <div class="mt-6 grid grid-cols-2 gap-4 text-xs text-slate-300">
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <strong class="text-amber-400 block mb-1">🎙️ Voice & Text Desk</strong>
-              Direct executive communication via voice notes or written inquiry.
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <strong class="text-amber-400 block mb-1">🌍 Multilingual Support</strong>
-              Immediate response in your preferred international language.
-            </div>
-          </div>
 
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a href="https://t.me/YaraEnterpriseBot" target="_blank" rel="noopener noreferrer"
-               class="px-7 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20">
-              Start Direct Consultation on Telegram →
-            </a>
-          </div>
-        </div>
+async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.message
+    if not msg:
+        return
+    media = msg.voice or msg.audio
+    if not media:
+        return
 
-        <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/25 rounded-2xl p-8 text-center shadow-2xl">
-          <div class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 font-serif-luxury text-2xl font-bold mx-auto mb-5">
-            A
-          </div>
-          <h3 class="font-serif-luxury text-2xl font-bold text-white">Private Client Channel</h3>
-          <p class="text-slate-400 text-sm mt-2 max-w-md mx-auto leading-relaxed">
-            Connect directly with Aria on our encrypted Telegram desk for immediate strategic scheduling, service documentation, and partnership onboarding.
-          </p>
-          <div class="mt-6 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-300">
-            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">🔒 Confidential & Encrypted</span>
-            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">⚡ Instant Desk Routing</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    await context.bot.send_chat_action(msg.chat_id, ChatAction.TYPING)
 
-  <!-- Global Affiliate & Partnership Programs -->
-  <section id="affiliate" class="py-20 px-6 border-t border-slate-800/70">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <span class="text-amber-400 text-xs font-bold uppercase tracking-[0.2em]">Automated Revenue Network</span>
-        <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-white mt-2">Global Affiliate & Partnership Programs</h2>
-        <p class="text-slate-400 mt-3 text-sm sm:text-base">
-          Partner with Yara Enterprise FZ-LLC through our automated 24/7 tracking infrastructure and earn transparent institutional commissions.
-        </p>
-      </div>
+    if not OPENAI_API_KEY:
+        await msg.reply_text(
+            "نامە دەنگییەکەتم وەرگرت 🎙️ بەڵام هێشتا ناتوانم دەنگ بگۆڕم بۆ تێکست. "
+            "تکایە پەیامەکەت بە نووسین بنێرە. 🌸"
+        )
+        return
 
-      <div class="grid md:grid-cols-2 gap-8">
-        <!-- Affiliate Card 1 -->
-        <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold">15% COMMISSION</span>
-              <span class="text-xs text-emerald-400 font-medium">● Active Tracking</span>
-            </div>
-            <h3 class="text-xl font-bold text-white">Global Strategic Advisory Referral</h3>
-            <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-              Refer executives, retirees, or international entrepreneurs seeking independent strategic consulting and capital preservation blueprints.
-            </p>
-          </div>
-          <div class="mt-6 pt-5 border-t border-slate-800">
-            <a href="https://yaraenterprise.pythonanywhere.com/affiliate/advisory?ref=yara_enterprise" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center justify-center w-full py-3 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">
-              Activate Advisory Affiliate Link →
-            </a>
-          </div>
-        </div>
+    tmp_path = None
+    try:
+        tg_file = await context.bot.get_file(media.file_id)
+        with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as tmp:
+            tmp_path = tmp.name
+        await tg_file.download_to_drive(tmp_path)
 
-        <!-- Affiliate Card 2 -->
-        <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold">10% RECURRING</span>
-              <span class="text-xs text-emerald-400 font-medium">● Active Tracking</span>
-            </div>
-            <h3 class="text-xl font-bold text-white">Enterprise Infrastructure & Cloud Partner</h3>
-            <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-              Connect businesses with automated 24/7 multilingual client advisory hubs and enterprise cloud governance solutions.
-            </p>
-          </div>
-          <div class="mt-6 pt-5 border-t border-slate-800">
-            <a href="https://yaraenterprise.pythonanywhere.com/affiliate/infra?ref=yara_enterprise" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center justify-center w-full py-3 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-sm transition">
-              Activate Infrastructure Affiliate Link →
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        # کارە درێژخایەنەکە لە thread جیا بکە تا بوتەکە نەوەستێت
+        text = await asyncio.to_thread(transcribe_file, tmp_path)
 
-  <!-- Executive Governance & Footer -->
-  <footer id="governance" class="py-16 px-6 bg-slate-950 border-t border-slate-800/80">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10 text-sm">
-      <div>
-        <div class="font-serif-luxury text-xl font-bold text-white">YARA ENTERPRISE FZ-LLC</div>
-        <p class="text-slate-400 mt-3 leading-relaxed text-xs">
-          Executive Strategic Advisory, Principal Wealth Preservation Blueprints, and International Corporate Governance.
-        </p>
-        <p class="text-amber-400/90 text-xs mt-4 font-medium">
-          Managing Director: Yara Saeed
-        </p>
-      </div>
+        if not text:
+            await msg.reply_text("نەمتوانی دەنگەکە بگۆڕم بۆ تێکست. تکایە دووبارە بنێرە یان بنووسە. 🌸")
+            return
 
-      <div>
-        <div class="text-white font-semibold mb-3">Executive Desk & Contact</div>
-        <ul class="space-y-2 text-xs text-slate-400">
-          <li>Email: <a href="mailto:yara.enterprise.dubai@gmail.com" class="text-slate-200 hover:text-amber-400">yara.enterprise.dubai@gmail.com</a></li>
-          <li>Operating Hub: UAE & International Digital Governance</li>
-          <li>Executive Desk: Active 24/7 via Telegram</li>
-        </ul>
-      </div>
+        await msg.reply_text(f"🎙️ بیستم: {text}")
+        await msg.reply_text(build_reply(text))
+    except Exception:
+        logger.exception("هەڵە لە پرۆسەی نامە دەنگییەکە")
+        await msg.reply_text("ببورە، کێشەیەک ڕوویدا لە کاتی پرۆسەی دەنگەکە. تکایە دووبارە هەوڵ بدەرەوە. 🌸")
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
-      <div>
-        <div class="text-white font-semibold mb-3">Compliance & Regulatory Notice</div>
-        <p class="text-xs text-slate-500 leading-relaxed">
-          Yara Enterprise FZ-LLC provides independent educational and strategic consulting services only. We never hold, manage, or take custody of client funds; clients retain 100% direct control in their own licensed financial institutions.
-        </p>
-      </div>
-    </div>
 
-    <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-      <span>© 2026 Yara Enterprise FZ-LLC. All Rights Reserved.</span>
-      <span class="mt-2 sm:mt-0">24/7 Executive Governance & Client Relations</span>
-    </div>
-  </footer>
+async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE):
+    logger.error("هەڵەی بێ-گرتن:", exc_info=context.error)
 
-</body>
-</html>
+
+if __name__ == "__main__":
+    print("Starting Aria Bot Engine...")
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+    app.add_error_handler(on_error)
+    print("Bot is running... (Aria Online 🚀)")
+    app.run_polling(drop_pending_updates=True)
