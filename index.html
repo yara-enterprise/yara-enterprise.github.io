@@ -1,51 +1,18 @@
-from __future__ import annotations
-
+# -*- coding: utf-8 -*-
+"""
+Aria Bot - Flask + Telegram Webhook (بۆ PythonAnywhere)
+فایلی .env دەتوانێت لە mysite/ یان لە فۆڵدەری سەرەکی بێت.
+"""
 import os
 import re
-import asyncio
+import hashlib
 import logging
 import tempfile
-from flask import Flask, request
+import asyncio
+from collections import OrderedDict
 
 import requests
-from dotenv import load_dotenv
-from telegram import Update
-from telegram.constants import ChatAction
-from telegram.ext import (
-    Application,
-    ContextTypes,
-    CommandHandler,
-    MessageHandler,
-    filters,
-)
-
-# ڕێکخستنی فایلی .env
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
-def load_token() -> str | None:
-    token = os.environ.get("BOT_TOKEN")
-    if token:
-        return token.strip().strip('"').strip("'")
-    pattern = re.compile(r"\d{6,}:[A-Za-z0-9_-]{30,}")
-    for name in (".env", "token.txt"):
-        path = os.path.join(BASE_DIR, name)
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                match = pattern.search(f.read())
-            if match:
-                return match.group(0)
-    return None
-
-TOKEN = load_token()
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-
-TTS_VOICE = os.environ.get("TTS_VOICE", "ar-IQ-RanaNeural")
-TTS_VOICE_EN = os.environ.get("TTS_VOICE_EN", "en-US-AriaNeural")
-VOICE_REPLIES = os.environ.get("VOICE_REPLIES", "1") != "0"
-
-if not TOKEN:
-    raise SystemExit("BOT_TOKEN نەدۆزرایەوە لە .env")
+from flask import Flask, request, abort, jsonify
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -53,17 +20,88 @@ logging.basicConfig(
 )
 logger = logging.getLogger("aria-bot")
 
-flask_app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TOKEN_RE = re.compile(r"\d{6,}:[A-Za-z0-9_-]{30,}")
 
-# دروستکردنی ئەپی تێلیگرام بۆ Webhook
-telegram_app = Application.builder().token(TOKEN).updater(None).build()
 
-def build_reply(text: str) -> str:
+def load_settings():
+    values = {}
+    scanned_token = None
+    for folder in (BASE_DIR, os.path.dirname(BASE_DIR)):
+        for name in (".env", "token.txt"):
+            path = os.path.join(folder, name)
+            if not os.path.isfile(path):
+                continue
+            try:
+                with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                    text = f.read()
+            except OSError:
+                continue
+            for line in text.splitlines():
+                line = line.strip().lstrip(chr(0xFEFF))
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, val = line.split("=", 1)
+                values.setdefault(key.strip(), val.strip().strip('"').strip("'"))
+            if scanned_token is None:
+                m = TOKEN_RE.search(text)
+                if m:
+                    scanned_token = m.group(0)
+
+    token = None
+    for cand in (os.environ.get("BOT_TOKEN"), values.get("BOT_TOKEN")):
+        if cand:
+            m = TOKEN_RE.search(cand)
+            if m:
+                token = m.group(0)
+                break
+    if token is None:
+        token = scanned_token
+
+    def get(name, default=None):
+        return os.environ.get(name) or values.get(name) or default
+
+    return token, get
+
+
+TOKEN, _get = load_settings()
+OPENAI_API_KEY = _get("OPENAI_API_KEY")
+TTS_VOICE = _get("TTS_VOICE", "ar-IQ-RanaNeural")
+TTS_VOICE_EN = _get("TTS_VOICE_EN", "en-US-AriaNeural")
+VOICE_REPLIES = _get("VOICE_REPLIES", "1") != "0"
+
+if TOKEN:
+    PATH_SECRET = hashlib.sha256(("path:" + TOKEN).encode()).hexdigest()[:32]
+    HEADER_SECRET = hashlib.sha256(("hdr:" + TOKEN).encode()).hexdigest()[:32]
+else:
+    PATH_SECRET = HEADER_SECRET = None
+    logger.error("BOT_TOKEN not found. Put BOT_TOKEN=... in the .env file")
+
+app = Flask(__name__)
+
+
+def tg(method, json=None, files=None, data=None, timeout=30):
+    url = "https://api.telegram.org/bot{}/{}".format(TOKEN, method)
+    resp = requests.post(url, json=json, files=files, data=data, timeout=timeout)
+    try:
+        result = resp.json()
+    except ValueError:
+        result = {"ok": False, "description": resp.text[:200]}
+    if not result.get("ok"):
+        logger.error("Telegram %s error: %s", method, result.get("description"))
+    return result
+
+
+def send_text(chat_id, text):
+    return tg("sendMessage", json={"chat_id": chat_id, "text": text})
+
+
+def build_reply(text):
     low = text.lower()
     if "yara" in low or "یارا" in text:
         return (
             "سڵاو لە دڵە زێڕینەکەت بەڕێوەبەرە خۆشەویستەکەم، یارا گیان! 🌸💎 لە خزمەتتدام. "
-            "فەرماندە، کارە ئۆتۆماتیکەکانی ئاریا بە تەواوی لەسەر هەور چالاکن. ☕🚀✨"
+            "فەرماندە، کارە ئۆتۆماتیکەکانی ئاریا بە تەواوی چالاکن. ☕🚀✨"
         )
     if "retire" in low or "خانەنشین" in text:
         return (
@@ -78,109 +116,181 @@ def build_reply(text: str) -> str:
             "Agreement protocol."
         )
     return (
-        f"سوپاس بۆ پەیامەکەت. وەک ڕاوێژکاری سەرەکی Yara Enterprise، پەیامەکەت: '{text}' "
-        "وەرگیرا. بۆ بەردەوامی گفتوگۆی فەرمی لە خزمەتتدام."
+        "سوپاس بۆ پەیامەکەت. وەک ڕاوێژکاری سەرەکی Yara Enterprise، پەیامەکەت: '{}' "
+        "وەرگیرا. بۆ بەردەوامی گفتوگۆی فەرمی لە خزمەتتدام.".format(text)
     )
 
-def transcribe_file(path: str) -> str | None:
-    if not OPENAI_API_KEY:
-        return None
-    with open(path, "rb") as f:
-        resp = requests.post(
-            "https://api.openai.com/v1/audio/transcriptions",
-            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
-            files={"file": ("voice.ogg", f, "audio/ogg")},
-            data={"model": "whisper-1"},
-            timeout=60,
-        )
-    resp.raise_for_status()
-    return resp.json().get("text", "").strip()
 
-async def send_reply(msg, text: str):
-    await msg.reply_text(text)
+def start_text(first_name):
+    return (
+        "سڵاو {} گیان! 🌸💎\n"
+        "من ئاریام، ڕاوێژکاری سەرەکیی Yara Enterprise FZ-LLC.\n"
+        "چۆن دەتوانم هاوکاریت بکەم لە پرۆژە و ڕاوێژکارییەکانتدا؟ ☕🚀".format(first_name or "فەرماندە")
+    )
+
+
+def make_voice_file(text):
+    import edge_tts  # pip3.X install --user edge-tts
+
+    clean = re.sub(r"[^\w\s.,!?؟،:'\-]", " ", text)
+    clean = re.sub(r"\s+", " ", clean).strip()
+    if not clean:
+        return None
+    arabic_range = "[" + chr(0x0600) + "-" + chr(0x06FF) + "]"
+    voice = TTS_VOICE if re.search(arabic_range, clean) else TTS_VOICE_EN
+
+    fd, path = tempfile.mkstemp(suffix=".mp3")
+    os.close(fd)
+    loop = asyncio.new_event_loop()
+    try:
+        loop.run_until_complete(edge_tts.Communicate(clean, voice).save(path))
+    except Exception:
+        if os.path.exists(path):
+            os.remove(path)
+        raise
+    finally:
+        loop.close()
+    return path
+
+
+def send_reply(chat_id, text):
+    send_text(chat_id, text)
     if not VOICE_REPLIES:
         return
     path = None
     try:
-        import edge_tts
-        clean = re.sub(r"[^\w\s.,!?؟،:'\-]", " ", text)
-        clean = re.sub(r"\s+", " ", clean).strip()
-        if not clean:
+        tg("sendChatAction", json={"chat_id": chat_id, "action": "record_voice"})
+        path = make_voice_file(text)
+        if not path:
             return
-        has_arabic_script = re.search(r"[\u0600-\u06FF]", clean) is not None
-        voice = TTS_VOICE if has_arabic_script else TTS_VOICE_EN
-
-        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
-            path = tmp.name
-        await edge_tts.Communicate(clean, voice).save(path)
-
         with open(path, "rb") as f:
-            await msg.reply_voice(voice=f)
+            tg("sendVoice", data={"chat_id": chat_id}, files={"voice": ("reply.mp3", f, "audio/mpeg")}, timeout=60)
     except Exception:
-        logger.exception("نەتوانرا وەڵامی دەنگی بنێردرێت")
+        logger.exception("voice reply failed (text was sent)")
     finally:
         if path and os.path.exists(path):
             os.remove(path)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_name = update.effective_user.first_name if update.effective_user else "فەرماندە"
-    await update.message.reply_text(
-        f"سڵاو {user_name} گیان! 🌸💎\n"
-        "من ئاریام، ڕاوێژکاری سەرەکیی Yara Enterprise FZ-LLC.\n"
-        "چۆن دەتوانم هاوکاریت بکەم لە پرۆژە و ڕاوێژکارییەکانتدا؟ ☕🚀"
+
+def transcribe_voice(file_id):
+    if not OPENAI_API_KEY:
+        return None
+    info = tg("getFile", json={"file_id": file_id})
+    file_path = (info.get("result") or {}).get("file_path")
+    if not file_path:
+        return None
+    audio = requests.get(
+        "https://api.telegram.org/file/bot{}/{}".format(TOKEN, file_path), timeout=60
     )
+    audio.raise_for_status()
+    resp = requests.post(
+        "https://api.openai.com/v1/audio/transcriptions",
+        headers={"Authorization": "Bearer {}".format(OPENAI_API_KEY)},
+        files={"file": ("voice.ogg", audio.content, "audio/ogg")},
+        data={"model": "whisper-1"},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return resp.json().get("text", "").strip()
 
-async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not update.message or not update.message.text:
-        return
-    await send_reply(update.message, build_reply(update.message.text.strip()))
 
-async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    msg = update.message
+def process_update(update):
+    msg = update.get("message")
     if not msg:
         return
-    media = msg.voice or msg.audio
-    if not media:
-        return
+    chat_id = msg["chat"]["id"]
+    text = msg.get("text")
 
-    await context.bot.send_chat_action(msg.chat_id, ChatAction.TYPING)
-    if not OPENAI_API_KEY:
-        await msg.reply_text("نامە دەنگییەکەتم وەرگرت 🎙️ بەڵام کلیلی ئۆپن‌ئای نەدۆزرایەوە.")
-        return
-
-    tmp_path = None
-    try:
-        tg_file = await context.bot.get_file(media.file_id)
-        with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as tmp:
-            tmp_path = tmp.name
-        await tg_file.download_to_drive(tmp_path)
-
-        text = await asyncio.to_thread(transcribe_file, tmp_path)
-        if not text:
-            await msg.reply_text("نەمتوانی دەنگەکە بگۆڕم بۆ تێکست.")
+    if text:
+        if text.startswith("/start"):
+            send_text(chat_id, start_text((msg.get("from") or {}).get("first_name")))
+        elif text.startswith("/"):
             return
+        else:
+            send_reply(chat_id, build_reply(text.strip()))
+        return
 
-        await msg.reply_text(f"🎙️ بیستم: {text}")
-        await send_reply(msg, build_reply(text))
-    except Exception:
-        logger.exception("هەڵە لە پرۆسەی دەنگ")
-    finally:
-        if tmp_path and os.path.exists(tmp_path):
-            os.remove(tmp_path)
+    media = msg.get("voice") or msg.get("audio")
+    if media:
+        if not OPENAI_API_KEY:
+            send_text(
+                chat_id,
+                "نامە دەنگییەکەتم وەرگرت 🎙️ بەڵام هێشتا ناتوانم دەنگ بگۆڕم بۆ تێکست. "
+                "تکایە پەیامەکەت بە نووسین بنێرە. 🌸",
+            )
+            return
+        heard = transcribe_voice(media["file_id"])
+        if not heard:
+            send_text(chat_id, "نەمتوانی دەنگەکە بگۆڕم بۆ تێکست. تکایە دووبارە بنێرە یان بنووسە. 🌸")
+            return
+        send_text(chat_id, "🎙️ بیستم: {}".format(heard))
+        send_reply(chat_id, build_reply(heard))
 
-# زیادکردنی هەندڵەرەکان بۆ ئەپی تێلیگرام
-telegram_app.add_handler(CommandHandler("start", start))
-telegram_app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
-telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
-@flask_app.route(f"/{TOKEN}", methods=["POST"])
-def webhook():
-    """ئەم ڕێگەیە داواکارییەکان لە تێلیگرامەوە وەردەگرێت و دەیانێرێت بۆ بوت"""
-    if request.method == "POST":
-        update = Update.de_json(request.get_json(force=True), telegram_app.bot)
-        asyncio.run(telegram_app.process_update(update))
-    return "OK", 200
+SEEN = OrderedDict()
 
-@flask_app.route("/")
+
+@app.route("/")
 def index():
-    return "Aria Bot is running 24/7 on PythonAnywhere! 🚀"
+    if not TOKEN:
+        return "Aria bot: BOT_TOKEN not found. Check the .env file.", 500
+    return "Aria bot is running."
+
+
+@app.route("/set_webhook")
+def set_webhook():
+    if not TOKEN:
+        return "BOT_TOKEN not found.", 500
+    url = "https://{}/webhook/{}".format(request.host, PATH_SECRET)
+    result = tg(
+        "setWebhook",
+        json={
+            "url": url,
+            "secret_token": HEADER_SECRET,
+            "allowed_updates": ["message"],
+            "drop_pending_updates": False,
+        },
+    )
+    return jsonify({"ok": result.get("ok"), "description": result.get("description")})
+
+
+@app.route("/webhook_info")
+def webhook_info():
+    if not TOKEN:
+        return "BOT_TOKEN not found.", 500
+    info = (tg("getWebhookInfo", json={}).get("result")) or {}
+    return jsonify(
+        {
+            "webhook_set": bool(info.get("url")),
+            "pending_update_count": info.get("pending_update_count"),
+            "last_error_date": info.get("last_error_date"),
+            "last_error_message": info.get("last_error_message"),
+        }
+    )
+
+
+@app.route("/webhook/<secret>", methods=["POST"])
+def webhook(secret):
+    if not TOKEN or secret != PATH_SECRET:
+        abort(404)
+    if request.headers.get("X-Telegram-Bot-Api-Secret-Token") != HEADER_SECRET:
+        abort(403)
+
+    update = request.get_json(silent=True) or {}
+    update_id = update.get("update_id")
+    if update_id is not None:
+        if update_id in SEEN:
+            return "ok"
+        SEEN[update_id] = True
+        while len(SEEN) > 500:
+            SEEN.popitem(last=False)
+
+    try:
+        process_update(update)
+    except Exception:
+        logger.exception("error while processing update")
+    return "ok"
+
+
+if __name__ == "__main__":
+    app.run(debug=False)
